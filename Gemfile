@@ -9,7 +9,7 @@ group :test do
   gem 'selenium-webdriver'
   gem 'capybara', '2.1.0'
 end
-gem 'sass-rails', '4.0.0'
+gem 'sass-rails', '~> 4.0.2'
 gem 'uglifier', '2.1.1'
 gem 'coffee-rails', '4.0.0'
 gem 'jquery-rails', '2.2.1'
@@ -22,3 +22,4 @@ group :production do
   gem 'pg', '0.15.1'
 end
 gem 'rubyzip', '< 1.0.0' 
+gem 'bootstrap-sass', '2.3.2.0'
