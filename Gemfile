@@ -23,3 +23,4 @@ group :production do
 end
 gem 'rubyzip', '< 1.0.0' 
 gem 'bootstrap-sass', '2.3.2.0'
+gem 'bcrypt-ruby', '3.0.1'
