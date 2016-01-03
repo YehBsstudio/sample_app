@@ -29,6 +29,15 @@ describe User do
     it { should_not be_valid }
   end
 
+  describe "email address with mixed case" do ###6.5節練習Email變小寫的測試
+    let(:mixed_case_email){ "Foo@ExAmpLe.CoM"}
+      it "should be saved as all lower-case" do
+        @user.email = mixed_case_email
+        @user.save
+        expect(@user.reload.email).to eq mixed_case_email.downcase ###user.reload.email的用法於 p.188
+      end
+    end
+
   describe "when name is too long" do ###同上，若輸出True通過測試，否則False 顯示describe描述。 
     before { @user.name = "a" * 51 }
     it { should_not be_valid }
@@ -37,7 +46,7 @@ describe User do
   describe "when email format is invalid" do ###同上，若輸出True通過測試，否則False 顯示describe描述。 
     it "should be invalid" do
       addresses = %w[user@foo,com user_at_foo.org example.user@foo.
-                      foo@bar_baz.com foo@bar_baz.com]
+                      foo@bar_baz.com foo@bar_baz.com foo@bar..com]
       addresses.each do |invalid_address|
         @user.email = invalid_address
         expect(@user).not_to be_valid
