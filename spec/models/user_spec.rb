@@ -14,9 +14,10 @@ describe User do
   it { should respond_to(:password_digest)} ###測試確保users表中有Symbol :password_digest是存在的
   it { should respond_to(:password) } ###同上
   it { should respond_to(:password_confirmation)} ###同上
+  it { should respond_to(:remember_token)} ###測試是否有remember_token
   it { should be_valid } ###測試確保＠user對象開始時是合法的
-
   it { should respond_to(:authenticate)} #6.3.3節響應是否有此方法
+
 
   describe "when name is not present" do ###[存在性測試]先假定@user.name為空值nil測試@user對象是否是不合法的。
   	before { @user.name = " "} ###指定@user.name為空值nil
@@ -66,7 +67,7 @@ describe User do
 
   describe "when email address is already taken" do
     before do
-      user_with_same_email = @user.dup
+      user_with_same_email = @user.dup ###dup 方法可以將user資料複製一份
       user_with_same_email.email = @user.email.upcase ###賦值給該對象之Symbal :email
       user_with_same_email.save
     end
@@ -112,4 +113,9 @@ describe User do
     end
   end
 
+    describe "remember token" do###測試token是否為空nil值
+      before { @user.save }
+      its(:remember_token) {should_not be_blank}
+      ### it { expect(@user.remember_token).not_to be_blank }
+    end
 end

@@ -1,12 +1,16 @@
 SampleApp::Application.routes.draw do
 
-
+  resources :sessions, only:[:now, :create, :destroy]
   resources :users
 
   #get "users/new"
-  root 'static_pages#home'
+  root to: 'static_pages#home'
   
-  match '/signup',  to: 'users#new',            via: 'get'
+  match '/signup',  to: 'users#new',            via: 'get'    ### match '/signup',  to: '程式碼檔案存放處#函式名稱', via: 'Http協定Action'
+  match '/signin',  to: 'sessions#new',          via: 'get'
+  match '/signout', to: 'sessions#destroy',      via: 'delete' 
+
+
   match '/help',    to: 'static_pages#help',    via: 'get'
   match '/about',   to: 'static_pages#about',   via: 'get'
   match '/contact', to: 'static_pages#contact', via: 'get'

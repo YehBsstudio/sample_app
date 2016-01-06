@@ -1,7 +1,7 @@
 class UsersController < ApplicationController
   
   def new
-  	@user = User.new
+  	@user = User.new ###從模型Model中使用User類 並創建給實例instance @user 
   end
   
   def show
@@ -11,9 +11,10 @@ class UsersController < ApplicationController
   def create
   	@user = User.new(user_params)
   	if @user.save
-  		redirect_to @user
+  		sign_in @user
   		flash[:success] = "Welcome to the Sample APP!"
-  		#Handle a successful save
+  		redirect_to @user
+      #Handle a successful save
   	else
   		render 'new'
   	end

@@ -3,7 +3,7 @@
   <aside class="span4">
     <section>
       <h1>
-        <%= gravatar_for @user %>
+        <%= gravatar_for @user ,{size: "500"} %>  <!--###p.129頁Hash 值放在最後不需要有大括號{}-->
         <%= @user.name %>
       </h1>
     </section>
