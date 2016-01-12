@@ -17,7 +17,16 @@ describe User do
   it { should respond_to(:remember_token)} ###測試是否有remember_token
   it { should be_valid } ###測試確保＠user對象開始時是合法的
   it { should respond_to(:authenticate)} #6.3.3節響應是否有此方法
+  it { should respond_to(:admin)}
 
+  describe "with admin attribute set to 'true'" do
+    before do
+      @user.save!
+      @user.toggle!(:admin)
+    end
+
+    it { should be_admin }
+  end
 
   describe "when name is not present" do ###[存在性測試]先假定@user.name為空值nil測試@user對象是否是不合法的。
   	before { @user.name = " "} ###指定@user.name為空值nil
