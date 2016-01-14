@@ -16,14 +16,15 @@ class UsersController < ApplicationController
     @users = User.paginate(page: params[:page])
   end
   
-  def show
+  def show ###show 方法會將實例變量 @傳入show圖中
   	@user = User.find(params[:id])
+    @microposts = @user.microposts.paginate(page: params[:page])
   end
 
   def create
   	@user = User.new(user_params)
   	if @user.save
-  		sign_in @user
+  		sign_in (@user) ###函式若僅單一參數可將()可省略
   		flash[:success] = "Welcome to the Sample APP!"
   		redirect_to @user
       #Handle a successful save
@@ -58,13 +59,6 @@ class UsersController < ApplicationController
     def user_params
     	params.require(:user).permit(:name, :email, :password, :password_confirmation)
 	  end
-
-    def signed_in_user
-      unless signed_in? ###9.2.3 友好轉向
-        store_location
-        redirect_to signin_url, notice: "Please sign in." unless signed_in?
-      end
-    end
 
     def correct_user
       @user = User.find(params[:id])

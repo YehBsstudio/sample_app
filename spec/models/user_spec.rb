@@ -11,13 +11,15 @@ describe User do
   subject { @user }
   it { should respond_to(:name) } ###測試確保該對象之Symbol :name是存在的
   it { should respond_to(:email) }
-  it { should respond_to(:password_digest)} ###測試確保users表中有Symbol :password_digest是存在的
+  it { should respond_to(:password_digest) } ###測試確保users表中有Symbol :password_digest是存在的
   it { should respond_to(:password) } ###同上
-  it { should respond_to(:password_confirmation)} ###同上
-  it { should respond_to(:remember_token)} ###測試是否有remember_token
+  it { should respond_to(:password_confirmation) } ###同上
+  it { should respond_to(:remember_token) } ###測試是否有remember_token
   it { should be_valid } ###測試確保＠user對象開始時是合法的
-  it { should respond_to(:authenticate)} #6.3.3節響應是否有此方法
-  it { should respond_to(:admin)}
+  it { should respond_to(:authenticate) } #6.3.3節響應是否有此方法
+  it { should respond_to(:admin) }
+  it { should respond_to(:microposts) }
+  it { should respond_to(:feed) }
 
   describe "with admin attribute set to 'true'" do
     before do
@@ -122,9 +124,41 @@ describe User do
     end
   end
 
-    describe "remember token" do###測試token是否為空nil值
-      before { @user.save }
-      its(:remember_token) {should_not be_blank}
+  describe "remember token" do###測試token是否為空nil值
+    before { @user.save }
+    its(:remember_token) {should_not be_blank}
       ### it { expect(@user.remember_token).not_to be_blank }
+  end
+
+  describe "micropost associations" do   ###測試用戶微博的次序
+    before { @user.save }
+    let!(:older_micropost) do
+      FactoryGirl.create(:micropost, user: @user, created_at: 1.day.ago)
     end
+    let!(:newer_micropost) do
+      FactoryGirl.create(:micropost, user: @user, created_at: 1.hour.ago)
+    end
+    it "should have the right microposts in the right order" do
+      expect(@user.microposts.to_a).to eq [newer_micropost, older_micropost]
+    end 
+
+    it "should destroy associated microposts" do
+      microposts = @user.microposts.to_a
+      @user.destroy
+      expect(microposts).not_to be_empty
+      microposts.each do |micropost|
+        expect(Micropost.where(id: micropost.id)).to be_empty
+      end
+    end
+
+    describe "status" do  ###對臨時動態列表的測試10.3.3節
+      let(:unfollowed_post) do
+        FactoryGirl.create(:micropost, user: FactoryGirl.create(:user))
+      end
+      its(:feed) { should include(newer_micropost) } ###include方法將檢查是否有該元素並傳回boolean值
+      its(:feed) { should include(older_micropost) }
+      its(:feed) { should_not include(unfollowed_post) }
+    end
+
+  end
 end
